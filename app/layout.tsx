@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -24,7 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={work_sans.className}>{children}</body>
+      <body className={work_sans.className}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
