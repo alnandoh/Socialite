@@ -9,7 +9,7 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
-export const TopBanner = () => {
+export default function TopBanner() {
   return (
     <Carousel
       className="w-full"
@@ -35,4 +35,4 @@ export const TopBanner = () => {
       <CarouselNext />
     </Carousel>
   );
-};
+}
