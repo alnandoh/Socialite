@@ -1,9 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import Logo from "@/public/logo.png";
+import RegisterForm from "../_component/RegisterForm";
 
 export default function page() {
   return (
@@ -17,48 +15,25 @@ export default function page() {
           className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
-      <div className="flex items-center justify-center py-12">
+      <div className="relative flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
+          <Link
+            href="/"
+            className="absolute top-10 left-1/2 justify-self-center -translate-x-[50%]"
+          >
+            <Image src={Logo} alt="Socialite logo" width={192} height={57} />
+          </Link>
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Register</h1>
             <p className="text-balance text-muted-foreground">
-              Enter your email below to Register to your account
+              Enter your details to register
             </p>
           </div>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Confirm Password</Label>
-              <Input id="password" type="password" required />
-            </div>
-            <Button type="submit" className="w-full">
-              Register
-            </Button>
-            <div className="flex justify-between items-center gap-4">
-              <Button variant="outline" className="w-full">
-                Register with Google
-              </Button>
-              <Button variant="outline" className="w-full">
-                Register with Facebook
-              </Button>
-            </div>
-          </div>
+          <RegisterForm />
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="#" className="underline">
-              Sign in
+            <Link href="/login" className="underline">
+              Login
             </Link>
           </div>
         </div>
