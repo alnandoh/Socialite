@@ -14,11 +14,15 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@radix-ui/react-popover";
-import { CalendarIcon, Calendar } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 
-const PromotionField = () => {
-  const { control } = useFormContext();
+interface PromotionFieldProps {
+  control: any;
+}
+
+const PromotionField: React.FC<PromotionFieldProps> = ({ control }) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "promotions",
