@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Search } from "./Search";
+import Search from "./Search";
 import logo from "/public/logo.png";
 
 export const Header = () => {
@@ -11,15 +11,16 @@ export const Header = () => {
           <Image src={logo} alt="Socialite logo" width={128} height={38} />
         </Link>
         <Search />
-        <div className="space-x-4">
-          {/* register or login as organizer */}
-          <Link href="/" className="nav-link">
+        <div className="space-x-3">
+          <Link href="/events" className="nav-link">
+            Discover
+          </Link>
+          <Link href="/dashboard" className="nav-link">
             Create Event
           </Link>
           <Link href="/login" className="nav-link">
             Login
           </Link>
-          {/* register as user */}
           <Link href="/register" className="nav-link">
             Register
           </Link>
