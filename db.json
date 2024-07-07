@@ -12,5 +12,15 @@
       "password": "12312312",
       "id": 2
     }
+  ],
+  "events" :[
+    {
+      "name": "Doctor Faustus by Christopher Marlowe",
+      "isFree": false,
+      "imageUrl": "",
+      "location": "Jakarta, Indonesia",
+      "startDateTime": "2022-02-02",
+      "price": "10000"
+    }
   ]
 }
