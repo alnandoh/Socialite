@@ -18,11 +18,8 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 
-interface PromotionFieldProps {
-  control: any;
-}
-
-const PromotionField: React.FC<PromotionFieldProps> = ({ control }) => {
+const PromotionField = () => {
+  const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "promotions",
