@@ -4,19 +4,14 @@ import { Event } from "@/types";
 interface EventSectionProps {
   title: string;
   url: string;
-  totalEvents: number;
 }
 
-export default function EventSection({
-  title,
-  url,
-  totalEvents,
-}: EventSectionProps) {
+export default function EventSection({ title, url }: EventSectionProps) {
   return (
     <section>
       <div className="wrapper">
-        <h2>{title}</h2>
-        <div className="grid grid-cols-4 gap-x-10 gap-y-10 my-4">
+        <h2 className="text-2xl font-semibold">{title}</h2>
+        <div className="grid grid-cols-4 gap-x-8 gap-y-8 my-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <EventCard
               event={{
