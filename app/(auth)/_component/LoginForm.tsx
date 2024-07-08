@@ -18,7 +18,6 @@ import { useToast } from "@/components/ui/use-toast";
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string(),
 });
 
 export const LoginForm = () => {
@@ -33,6 +32,7 @@ export const LoginForm = () => {
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    console.log(values);
     try {
       const response = await fetch("http://localhost:8080/users", {
         method: "POST",

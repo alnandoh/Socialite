@@ -35,6 +35,7 @@ export default function RegisterForm() {
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
+    console.log(values);
     try {
       const response = await fetch("http://localhost:8080/users", {
         method: "POST",

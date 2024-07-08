@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/public/logo.png";
 import { LoginForm } from "../_component/LoginForm";
+import Login from "@/public/Login.webp";
 
 export default function page() {
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div className="w-full h-screen lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
       <div className="hidden bg-muted lg:block">
         <Image
-          src="/placeholder.svg"
+          src={Login}
           alt="Image"
           width="1920"
           height="1080"
