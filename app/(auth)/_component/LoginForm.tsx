@@ -32,14 +32,17 @@ export const LoginForm = () => {
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    console.log(values);
     try {
-      const response = await fetch("http://localhost:8080/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
@@ -48,12 +51,20 @@ export const LoginForm = () => {
       toast({
         description: "Successfully login",
       });
-      router.push("/login");
+      router.push("/dashboard");
     } catch (error) {
-      console.log(error);
-      //   toast({
-      //     description: error,
-      //   });
+      if (error instanceof Error) {
+        toast({
+          description: error.message,
+          variant: "destructive",
+        });
+        console.log(error.message);
+      } else {
+        toast({
+          description: "An unknown error occurred",
+          variant: "destructive",
+        });
+      }
     }
   };
 

@@ -6,7 +6,7 @@ import Login from "@/public/Login.webp";
 
 export default function page() {
   return (
-    <div className="w-full h-screen lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div className="w-full h-screen lg:grid lg:grid-cols-2 xl:min-h-[800px]">
       <div className="hidden bg-muted lg:block">
         <Image
           src={Login}
