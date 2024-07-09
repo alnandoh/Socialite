@@ -1,22 +1,23 @@
 import { Calendar } from "lucide-react";
 import React from "react";
+import { RevenueChart } from "./_components/RevenueChart";
 
 const DashboardCard = [
   {
     title: "Total Events",
-    data: "1970",
+    data: "28",
   },
   {
-    title: "Total Events",
-    data: "1970",
+    title: "Total Revenue",
+    data: "Rp. 127.860.000",
   },
   {
-    title: "Total Events",
-    data: "1970",
+    title: "Total Attendees",
+    data: "29.363",
   },
   {
-    title: "Total Events",
-    data: "1970",
+    title: "Total Ratings",
+    data: "4.5",
   },
 ];
 
@@ -41,8 +42,8 @@ export default function DashboardPage() {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-5">
-        <p>Revenue</p>
+      <RevenueChart />
+      <div className="grid grid-cols-2 gap-5 my-4">
         <p>Latest Transaction</p>
       </div>
     </div>
