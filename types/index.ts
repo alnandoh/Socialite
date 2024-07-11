@@ -1,11 +1,12 @@
 export type Event = {
+  id: string;
   name: string;
   price?: string;
   isFree: boolean;
   imageUrl: string;
   location: string;
-  startDateTime: Date;
-  category?: Category;
+  date?: Date;
+  categoryName: string;
 };
 
 export type EventDetails = {
