@@ -1,4 +1,4 @@
-export type Event = {
+export interface Event {
   id: string;
   name: string;
   price?: string;
@@ -7,9 +7,9 @@ export type Event = {
   location: string;
   date?: Date;
   categoryName: string;
-};
+}
 
-export type EventDetails = {
+export interface EventDetails {
   id: string;
   name: string;
   description: string;
@@ -22,21 +22,27 @@ export type EventDetails = {
   organizer: Organizer;
   category?: Category;
   ticketTypes?: TicketType[];
-};
+}
 
-export type Organizer = {
+export interface Organizer {
   _id: string;
   name: string;
-};
+}
 
-export type Category = {
+export interface Category {
   _id: string;
   name: string;
-};
+}
 
-export type TicketType = {
+export interface TicketType {
   _id: string;
   name: string;
   price: string;
   Quantity: number;
-};
+}
+
+export interface Filters {
+  categoryId: string;
+  location: string;
+  sortBy: string;
+}
