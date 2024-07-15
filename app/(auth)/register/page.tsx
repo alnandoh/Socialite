@@ -16,16 +16,15 @@ export default function page() {
           className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </Link>
-      <div className="relative flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-3">
-          <Link
-            href="/"
-            className="absolute top-10 left-1/2 justify-self-center -translate-x-[50%]"
-          >
-            <Image src={Logo} alt="Socialite logo" width={192} height={57} />
-          </Link>
+      <div className="flex flex-col items-center py-12 px-10 h-full">
+        <Link href="/">
+          <p className="text-5xl font-medium">
+            Socia<span className="text-orange-400">lite</span>
+          </p>
+        </Link>
+        <div className="my-auto grid w-full max-w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Register</h1>
+            <h1 className="text-3xl font-semibold">Register</h1>
           </div>
           <RegisterForm />
           <div className="text-center text-sm">
