@@ -14,6 +14,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/components/ui/use-toast";
+import { signIn } from "next-auth/react";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -33,38 +34,13 @@ export const LoginForm = () => {
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message);
-      }
-      toast({
-        description: "Successfully login",
+      console.log(values);
+      await signIn("credentials", {
+        username: values.email,
+        password: values.password,
       });
-      router.push("/dashboard");
     } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          description: error.message,
-          variant: "destructive",
-        });
-        console.log(error.message);
-      } else {
-        toast({
-          description: "An unknown error occurred",
-          variant: "destructive",
-        });
-      }
+      console.log(error);
     }
   };
 

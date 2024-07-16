@@ -13,35 +13,43 @@ export interface EventDetails {
   id: string;
   name: string;
   description: string;
-  price?: string;
   isFree: boolean;
   imageUrl: string;
   location: string;
-  startDateTime: Date;
-  endDateTime?: Date;
+  date: Date;
+  endDate?: Date;
   organizer: Organizer;
-  category?: Category;
-  ticketTypes?: TicketType[];
+  category: Category;
+  tickets: Tickets[];
+  promotions?: Promotions;
 }
 
 export interface Organizer {
-  _id: string;
+  id: string;
   name: string;
+  email: string;
 }
 
 export interface Category {
-  _id: string;
+  id: string;
   name: string;
 }
 
-export interface TicketType {
-  _id: string;
+export interface Tickets {
+  id: string;
+  tierName: string;
+  price: number;
+  availableSeats: number;
+}
+
+export interface Promotions {
   name: string;
-  price: string;
-  Quantity: number;
+  discount: number;
+  maxUser: number;
 }
 
 export interface Filters {
+  name: string;
   categoryId: string;
   location: string;
   sortBy: string;

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/public/logo.png";
 import { LoginForm } from "../_component/LoginForm";
 import Login from "@/public/Login.webp";
 
@@ -27,11 +26,16 @@ export default function page() {
             <h1 className="text-3xl font-semibold">Login</h1>
           </div>
           <LoginForm />
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="underline">
-              Register
+          <div className="mt-2 text-center text-sm">
+            <Link href="/forgot-password" className=" underline">
+              Forgot your password?
             </Link>
+            <div className="mt-4">
+              Don&apos;t have an account?{" "}
+              <Link href="/register" className="underline">
+                Register
+              </Link>
+            </div>
           </div>
         </div>
       </div>
