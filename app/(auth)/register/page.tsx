@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/public/logo.png";
 import RegisterForm from "../_component/RegisterForm";
 import Register from "@/public/Register.webp";
 

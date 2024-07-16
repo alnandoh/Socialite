@@ -28,7 +28,7 @@ const registerSchema = z
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
-    role: z.enum(["1", "2"]),
+    role: z.enum(["ORGANIZER", "PARTICIPANT"]),
     referralCode: z
       .string()
       .min(8, "Referral code must be at least 8 characters")
@@ -166,8 +166,8 @@ export default function RegisterForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="1">Organizer</SelectItem>
-                    <SelectItem value="2">User</SelectItem>
+                    <SelectItem value="ORGANIZER">Organizer</SelectItem>
+                    <SelectItem value="PARTICIPANT">User</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
