@@ -8,6 +8,7 @@ const locations: Locations[] = [
   { value: "medan", label: "Medan" },
   { value: "semarang", label: "Semarang" },
   { value: "bandung", label: "Bandung" },
+  { value: "batam", label: "Batam" },
 ];
 
 export default locations;
