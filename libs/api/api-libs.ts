@@ -25,7 +25,7 @@ export const userLogin = async (userData: UserData) => {
     }).then((res) => res.json());
 
     const data = await response;
-
+    console.log(data);
     return data;
   } catch (error) {
     console.log("Can't catch data:", error);
@@ -33,20 +33,22 @@ export const userLogin = async (userData: UserData) => {
 };
 
 //Event
-export const createEvent = async (eventFormData: FormData) => {
-  const response = await axiosInstance.post(
-    `${apiUrl}/events/create`,
-    eventFormData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+export const createEvent = async (eventFormData: any) => {
+  try {
+    const response = await fetch(`${apiUrl}/events/create`, {
+      credentials: "include",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: eventFormData,
+    });
+    if (!response.ok) {
+      throw new Error("Failed to create event");
     }
-  );
-  if (response.status !== 200) {
-    throw new Error(response.data.message || "Failed to fetch events");
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
   }
-  return response.data;
 };
 
 export const fetchUpcomingEventsByCategory = async (query: string) => {
@@ -67,8 +69,8 @@ export const fetchFilteredEvents = async (query: string) => {
     throw new Error(response.data.message || "Failed to fetch events");
   }
   console.log("query" + query);
-  console.log(response);
-  return response.data.data;
+  console.log("Filter event response:", response);
+  return response.data;
 };
 
 export const fetchEventDetails = async (id: string) => {

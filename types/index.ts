@@ -52,5 +52,7 @@ export interface Filters {
   name: string;
   categoryId: string;
   location: string;
-  sortBy: string;
+  sort: string;
+  page: number;
+  limit: number;
 }
