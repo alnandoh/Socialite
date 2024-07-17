@@ -19,7 +19,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           password: credentials.password as string,
         };
         const user = await userLogin(userData);
-        console.log(user);
         // TODO: Adjust code below according to your backend response structure
         return user
           ? {
@@ -33,7 +32,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user }) {
-      console.log("user", user);
       return true;
     },
     async jwt({ token, user }: any) {
@@ -43,7 +41,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.role = user.role;
         token.accessToken = user.token;
       }
-      console.log("token", token);
       return token;
     },
     async session({ session, token }: any) {
@@ -57,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
     async redirect() {
-      return "/profile";
+      return "/";
     },
   },
   session: {

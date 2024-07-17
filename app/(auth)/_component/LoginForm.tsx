@@ -29,19 +29,14 @@ export const LoginForm = () => {
       password: "",
     },
   });
-  const router = useRouter();
-  const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      console.log(values);
       await signIn("credentials", {
         username: values.email,
         password: values.password,
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (
