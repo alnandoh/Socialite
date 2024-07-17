@@ -23,29 +23,29 @@ const DashboardCard = [
 
 export default function DashboardPage() {
   return (
-    <div className="w-full p-10 space-y-4">
+    <div className="w-full lg:p-10 p-4 space-y-4">
       <h1 className="text-3xl font-semibold">Dashboard</h1>
-      <div className="grid grid-cols-4 gap-5">
-        {DashboardCard.map((_, index) => (
-          <div className="p-4 rounded-lg flex flex-col gap-4 items-center border bg-stone-200">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {DashboardCard.map((card, index) => (
+          <div
+            key={index}
+            className="p-4 rounded-lg flex flex-col gap-4 items-center border bg-stone-200"
+          >
             <div className="flex gap-4 items-center">
               <div className="size-14 bg-white flex items-center justify-center rounded-full">
                 <Calendar className="size-8" />
               </div>
               <p className="text-xl font-medium bg-white rounded-lg p-2">
-                {_.title}
+                {card.title}
               </p>
             </div>
             <div className="space-x-2 bg-white py-4 w-full rounded-lg text-center">
-              <p className="text-3xl font-bold">{_.data}</p>
+              <p className="text-3xl font-bold">{card.data}</p>
             </div>
           </div>
         ))}
       </div>
       <RevenueChart />
-      <div className="grid grid-cols-2 gap-5 my-4">
-        <p>Latest Transaction</p>
-      </div>
     </div>
   );
 }

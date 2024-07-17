@@ -13,6 +13,44 @@ export default function DashboardSkeleton() {
   );
 }
 
+export function EventsWithFilterSkeleton() {
+  return (
+    <>
+      <section className="py-4">
+        <div className="wrapper flex flex-col justify-center items-center">
+          <h2 className="text-2xl font-semibold text-center mb-6">
+            <Skeleton className="w-40 h-8" />
+          </h2>
+          <div className="w-full flex flex-wrap justify-center gap-4 md:gap-6 xl:gap-10">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <Skeleton className="w-16 h-16 rounded-full mb-2" />
+                <Skeleton className="w-20 h-4" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section>
+        <div className="wrapper">
+          <h2 className="text-2xl text-center font-semibold mb-6">
+            <Skeleton className="w-60 h-8 mx-auto" />
+          </h2>
+          <div className="grid grid-cols-1 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-8 my-4 md:my-6">
+            {[...Array(8)].map((_, index) => (
+              <div key={index} className="w-full p-4 border rounded-lg">
+                <Skeleton className="w-full h-40 mb-4" />
+                <Skeleton className="w-3/4 h-6 mb-2" />
+                <Skeleton className="w-1/2 h-4" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
 export function SearchEventSkeleton() {
   return (
     <div className="w-full max-w-screen-xl flex px-10 mx-auto gap-6 min-h-screen">
@@ -60,5 +98,50 @@ export function EventCardSkeleton() {
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+export function EventDetailSkeleton() {
+  return (
+    <div className="my-12 grid grid-cols-1 lg:grid-cols-3 max-w-screen-xl mx-auto gap-6 min-h-screen px-4 lg:px-0">
+      <div className="lg:col-span-2 space-y-12">
+        <div className="w-full">
+          <Skeleton className="h-96 w-full rounded-lg" />
+        </div>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-8 w-40" />
+            <Skeleton className="h-8 w-28" />
+          </div>
+          <Skeleton className="h-24 w-full" />
+        </div>
+      </div>
+      <div className="lg:sticky top-6 space-y-9 h-fit">
+        <div className="border shadow-md p-5 space-y-4 rounded-lg">
+          <Skeleton className="h-10 w-60" />
+          <div className="text-lg text-stone-700 space-y-2">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-32" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-32" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-32" />
+            </div>
+          </div>
+          <hr />
+          <Skeleton className="h-6 w-40" />
+        </div>
+        <div className="border shadow-md p-5 rounded-lg text-center space-y-2">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-12 w-full" />
+        </div>
+        <div className="flex flex-col gap-2.5  items-center lg:items-start">
+          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-12 w-full" />
+        </div>
+      </div>
+    </div>
   );
 }

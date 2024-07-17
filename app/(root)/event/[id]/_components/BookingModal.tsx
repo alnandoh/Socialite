@@ -58,12 +58,30 @@ export default function BookingModal({ event }: BookingModalProps) {
     setTicketQuantities((prev) => ({ ...prev, [ticketName]: newQuantity }));
   };
 
-  const handleCheckout = () => {
-    console.log("Proceeding to checkout", {
-      ticketQuantities,
-      totalPrice,
-      discountAmount,
-    });
+  const selectedTickets = event.tickets
+    .map((ticket) => ({
+      ticketId: ticket.id,
+      quantity: ticketQuantities[ticket.tierName] || 0,
+    }))
+    .filter((ticket) => ticket.quantity > 0);
+
+  const handleCheckout = async () => {
+    console.log("my tickets", selectedTickets);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/transaction/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(selectedTickets),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log("Can't catch data:", error);
+    }
   };
 
   const formatPrice = (price: number) => {
