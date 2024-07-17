@@ -22,10 +22,14 @@ export default function FilterBar({
 
   return (
     <div className="w-full flex justify-between items-center flex-wrap gap-4">
-      <p>
-        Show 1 - {totalEvents} from{" "}
-        <span className="font-semibold">{totalEvents}</span> events
-      </p>
+      {totalEvents > 0 ? (
+        <p>
+          Show {totalEvents} from{" "}
+          <span className="font-semibold">{totalEvents}</span> events
+        </p>
+      ) : (
+        <p> No events found</p>
+      )}
 
       <div className="lg:hidden">
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>

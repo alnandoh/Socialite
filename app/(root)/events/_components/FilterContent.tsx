@@ -12,10 +12,10 @@ import locations from "@/constants/locations";
 import { Filters } from "@/types";
 
 const sortOptions = [
-  { value: "nameDesc", label: "Name", icon: ArrowDown },
-  { value: "nameAsc", label: "Name", icon: ArrowUp },
-  { value: "dateDesc", label: "Date", icon: ArrowDown },
-  { value: "dateAsc", label: "Date", icon: ArrowUp },
+  { value: "name,desc", label: "Name", icon: ArrowDown },
+  { value: "name,asc", label: "Name", icon: ArrowUp },
+  { value: "date,desc", label: "Date", icon: ArrowDown },
+  { value: "date,asc", label: "Date", icon: ArrowUp },
 ];
 
 interface FilterContentProps {
@@ -35,8 +35,8 @@ export default function FilterContent({
         onValueChange={(value) => onFilterChange("categoryId", value)}
         value={filters.categoryId}
       >
-        <SelectTrigger className="w-full min-w-[200px]">
-          <SelectValue placeholder="Filter category" />
+        <SelectTrigger className="w-full min-w-[150px]">
+          <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
           {categories.map((category) => (
@@ -51,8 +51,8 @@ export default function FilterContent({
         onValueChange={(value) => onFilterChange("location", value)}
         value={filters.location}
       >
-        <SelectTrigger className="w-full min-w-[200px]">
-          <SelectValue placeholder="Filter location" />
+        <SelectTrigger className="w-full min-w-[150px]">
+          <SelectValue placeholder="Location" />
         </SelectTrigger>
         <SelectContent>
           {locations.map((location) => (
@@ -64,10 +64,10 @@ export default function FilterContent({
       </Select>
 
       <Select
-        onValueChange={(value) => onFilterChange("sortBy", value)}
-        value={filters.sortBy}
+        onValueChange={(value) => onFilterChange("sort", value)}
+        value={filters.sort}
       >
-        <SelectTrigger className="w-full min-w-[200px]">
+        <SelectTrigger className="w-full min-w-[125px]">
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>
         <SelectContent>
@@ -82,7 +82,8 @@ export default function FilterContent({
       </Select>
 
       <Button onClick={onClearFilters} variant="outline" className="w-full">
-        <RotateCcw />
+        <RotateCcw className="h-4 w-4 hidden lg:flex" />
+        <p className="lg:hidden">Clear filters</p>
       </Button>
     </>
   );
