@@ -5,28 +5,8 @@ import { SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useDebounce } from "use-debounce";
-
-// Mock data
-const mockEvents = [
-  "Summer Music Festival 2024",
-  "Summer Music Festival 2023",
-  "Tech Conference: AI and Beyond",
-  "Annual Charity Gala",
-  "Business Leadership Summit",
-  "Art Exhibition: Modern Perspectives",
-  "Food and Wine Expo",
-  "Fitness Boot Camp Weekend",
-  "Photography Workshop Series",
-  "International Film Festival",
-  "Eco-Friendly Products Showcase",
-];
-
-const fetchSuggestions = async (query: string): Promise<string[]> => {
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return mockEvents
-    .filter((event) => event.toLowerCase().includes(query.toLowerCase()))
-    .slice(0, 5);
-};
+import { useQuery } from "@tanstack/react-query";
+import { fetchEventSuggestions } from "@/libs/api/api-libs";
 
 export default function Search({
   placeholder = "Search events...",
@@ -35,12 +15,17 @@ export default function Search({
 }) {
   const router = useRouter();
   const [query, setQuery] = useState<string>("");
-  const [debouncedQuery] = useDebounce(query, 300);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [debouncedQuery] = useDebounce(query, 500);
+  const [suggestions, setSuggestions] = useState<EventSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  type EventSuggestion = {
+    id: number;
+    name: string;
+  };
 
   const performSearch = useCallback(
     (searchQuery: string) => {
@@ -68,8 +53,8 @@ export default function Search({
       setSelectedIndex((prev) => (prev > -1 ? prev - 1 : -1));
     } else if (event.key === "Enter") {
       if (selectedIndex > -1) {
-        setQuery(suggestions[selectedIndex]);
-        performSearch(suggestions[selectedIndex]);
+        setQuery(suggestions[selectedIndex].name);
+        router.push(`/event/${suggestions[selectedIndex].id}`);
       } else {
         performSearch(query);
       }
@@ -78,25 +63,26 @@ export default function Search({
     }
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setQuery(suggestion);
-    performSearch(suggestion);
+  const handleSuggestionClick = (suggestion: EventSuggestion) => {
+    setQuery(suggestion.name);
+    router.push(`/event/${suggestion.id}`);
   };
 
-  useEffect(() => {
-    const getSuggestions = async () => {
-      if (debouncedQuery) {
-        const results = await fetchSuggestions(debouncedQuery);
-        setSuggestions(results);
-        setShowSuggestions(true);
-      } else {
-        setSuggestions([]);
-        setShowSuggestions(false);
-      }
-    };
+  const { data, isLoading } = useQuery<EventSuggestion[]>({
+    queryKey: ["eventSuggestions", debouncedQuery],
+    queryFn: () => fetchEventSuggestions(debouncedQuery),
+    enabled: !!debouncedQuery,
+  });
 
-    getSuggestions();
-  }, [debouncedQuery]);
+  useEffect(() => {
+    if (data) {
+      setSuggestions(data);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, [data]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -139,7 +125,9 @@ export default function Search({
           ref={suggestionsRef}
           className="absolute z-10 w-full max-w-[400px] bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
         >
-          {suggestions.length > 0 ? (
+          {isLoading ? (
+            <div className="px-4 py-2 text-gray-500">Loading...</div>
+          ) : suggestions.length > 0 ? (
             suggestions.map((suggestion, index) => (
               <div
                 key={index}
@@ -149,7 +137,7 @@ export default function Search({
                 onClick={() => handleSuggestionClick(suggestion)}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
-                {suggestion}
+                {suggestion.name}
               </div>
             ))
           ) : (
