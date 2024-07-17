@@ -15,7 +15,7 @@ const DateField: React.FC<DateFieldProps> = ({ control }) => {
   return (
     <FormField
       control={control}
-      name="date"
+      name="endDate"
       render={({ field }) => (
         <FormItem className="w-full">
           <FormLabel>Start Date</FormLabel>

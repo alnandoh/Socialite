@@ -20,7 +20,7 @@ interface CategoryFieldProps {
 const CategoryField: React.FC<CategoryFieldProps> = ({ control }) => (
   <FormField
     control={control}
-    name="category"
+    name="categoryId"
     render={({ field }) => (
       <FormItem className="w-full">
         <FormLabel>Category</FormLabel>

@@ -16,12 +16,12 @@ const DescriptionField: React.FC<DescriptionFieldProps> = ({ control }) => (
     control={control}
     name="description"
     render={({ field }) => (
-      <FormItem>
+      <FormItem className="h-full">
         <FormLabel>Description</FormLabel>
         <FormControl>
           <Textarea
             placeholder="Describe your event"
-            className="resize-none"
+            className="resize-none overflow-y-scroll lg:h-[200px] h-max-full"
             {...field}
           />
         </FormControl>
