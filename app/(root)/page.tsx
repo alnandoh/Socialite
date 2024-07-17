@@ -1,18 +1,12 @@
 import TopBanner from "./_components/TopBanner";
-import EventSection from "./_components/EventSection";
+import EventsWithFilter from "./_components/EventsWithFilter";
 
 export default function Home() {
   return (
-    <div className="space-y-12">
-      <section>
-        <div className="wrapper flex justify-center">
-          <TopBanner />
-        </div>
-      </section>
+    <div className="space-y-12 pb-6 flex-grow">
+      <TopBanner />
 
-      <EventSection title="Upcoming Events" url="/events" />
-
-      <EventSection title="Events Category" url="/events" />
+      <EventsWithFilter />
     </div>
   );
 }
