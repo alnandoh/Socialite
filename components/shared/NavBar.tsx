@@ -3,7 +3,6 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { Avatar, AvatarImage } from "../ui/avatar";
 import { UserRoundIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,34 +23,36 @@ export const NavBar = () => {
         </Button>
       </Link>
       {session ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="flex items-center space-x-2 cursor-pointer">
-              <Avatar>
-                {session.user?.image ? (
-                  <AvatarImage
-                    src={session.user.image}
-                    alt={session.user.name || "User"}
-                  />
-                ) : (
+        <>
+          <div className="hidden lg:flex">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex items-center space-x-2 cursor-pointer">
                   <UserRoundIcon />
-                )}
-              </Avatar>
-              <span className="text-sm font-medium">{session.user?.name}</span>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/profile">Profile</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => signOut()}>
-              Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+                  <span className="text-sm font-medium">
+                    {session.user?.name}
+                  </span>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard">Dashboard</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => signOut()}>
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div className="flex flex-col justify-center items-center space-y-6 text-sm lg:hidden">
+            <Link href="/dashboard">Dashboard</Link>{" "}
+            <Link href="/profile">Profile</Link>
+            <button onClick={() => signOut()}>Sign Out</button>
+          </div>
+        </>
       ) : (
         <>
           <Link href="/dashboard/create">
