@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/public/logo.png";
 import { LoginForm } from "../_component/LoginForm";
-import Login from "@/public/Login.webp";
+import Login from "@/public/login.webp";
 
 export default function page() {
   return (
