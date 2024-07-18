@@ -13,12 +13,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSession } from "next-auth/react";
 
 interface BookingModalProps {
   event: EventDetails;
 }
 
 export default function BookingModal({ event }: BookingModalProps) {
+  const { data: session } = useSession();
   const [ticketQuantities, setTicketQuantities] = useState<
     Record<string, number>
   >(
@@ -65,22 +67,32 @@ export default function BookingModal({ event }: BookingModalProps) {
     }))
     .filter((ticket) => ticket.quantity > 0);
 
-  const handleCheckout = async () => {
-    console.log("my tickets", selectedTickets);
+  const handleCheckout = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+
     try {
+      console.log(JSON.stringify(selectedTickets));
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/transaction/create`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.token}`,
+          },
           body: JSON.stringify(selectedTickets),
         }
       );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
       const data = await response.json();
       console.log(data);
-      return data;
     } catch (error) {
-      console.log("Can't catch data:", error);
+      console.error("Error:", error);
     }
   };
 
