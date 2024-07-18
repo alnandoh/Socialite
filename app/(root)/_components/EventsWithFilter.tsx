@@ -6,6 +6,7 @@ import { fetchUpcomingEventsByCategory } from "@/libs/api/api-libs";
 import { useQuery } from "@tanstack/react-query";
 import { Event } from "@/types";
 import { EventsWithFilterSkeleton } from "@/components/shared/Skeleton";
+import categories from "@/constants/categories";
 
 export default function EventsWithFilter() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -29,6 +30,10 @@ export default function EventsWithFilter() {
     queryFn: () => fetchUpcomingEventsByCategory(queryString),
   });
 
+  const selectedCategoryLabel = selectedCategory
+    ? categories.find((cat) => cat.value === selectedCategory)?.label
+    : null;
+
   if (isPending) return <EventsWithFilterSkeleton />;
   if (isError) return <span>Error: {error.message}</span>;
 
@@ -41,7 +46,7 @@ export default function EventsWithFilter() {
       <EventSection
         title={
           selectedCategory
-            ? `Recently Created ${events[0].categoryName} Events`
+            ? `Recently Created ${selectedCategoryLabel} Events`
             : "All Upcoming Events"
         }
         events={events}
