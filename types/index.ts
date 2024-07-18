@@ -21,7 +21,7 @@ export interface EventDetails {
   organizer: Organizer;
   category: Category;
   tickets: Tickets[];
-  promotions?: Promotions;
+  promotions?: Promotions[];
 }
 
 export interface Organizer {
@@ -55,4 +55,15 @@ export interface Filters {
   sort: string;
   page: number;
   limit: number;
+}
+
+export interface UserProfile {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  referralCode: string;
 }
