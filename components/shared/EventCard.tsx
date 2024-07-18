@@ -10,44 +10,35 @@ interface EventCardProps {
 }
 
 export default function EventCard({ event }: EventCardProps) {
-  const slug = slugify(event.name);
   return (
     <Link
-      href={`/event/${slug}`}
-      className="bg-card border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
+      href={`/event/${event.id}`}
+      className="max-w-[300px] w-full bg-card border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
     >
-      <div className="relative">
+      <div className="relative pt-[56.25%] rounded-lg overflow-hidden">
         <Image
-          src={event.imageUrl}
-          width={300}
-          height={150}
+          src={event.imageUrl || ""}
           alt={event.name}
-          className="w-full object-cover rounded-lg bg-slate-300"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover bg-slate-300"
         />
-        <div className="absolute top-0 left-0 bg-orange-300 p-1 text-sm rounded-md font-semibold">
-          Category
+        <div className="absolute top-0 left-0 bg-orange-400/25 backdrop-blur p-1.5 text-sm rounded-md font-semibold">
+          <p>{event.categoryName || "Music"}</p>
         </div>
-        <div className="absolute bottom-0 right-0 bg-orange-300 p-1 text-sm rounded-md">
-          <p className="font-bold">
-            {event.isFree
-              ? "Free"
-              : `Rp. ${
-                  event.price
-                    ? event.price.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                    : "N/A"
-                }`}
-          </p>
+        <div className="absolute bottom-0 right-0 bg-orange-400/25 backdrop-blur-lg p-1.5 text-sm rounded-md">
+          <p className="font-bold">{event.isFree ? "Free" : "Paid"}</p>
         </div>
       </div>
-      <div className="px-5 py-4 relative">
-        <h3 className="text-xl font-semibold leading-tight mt-2">
+      <div className="px-5 py-4 space-y-2">
+        <h3 className="text-xl font-semibold leading-tight capitalize line-clamp-2">
           {event.name}
         </h3>
-        <div className="flex items-center gap-2 text-stone-700 text-sm mt-2">
+        <div className="flex items-center gap-2 text-stone-800 text-sm pt-2">
           <Calendar className="size-4" />
-          {format(new Date(event.startDateTime), "EEE, dd MMM yyyy")}
+          {event.date ? format(new Date(event.date), "cccc, dd MMM yyyy") : ""}
         </div>
-        <div className="flex items-center gap-2 text-stone-700 text-sm mt-1">
+        <div className="flex items-center gap-2 text-stone-800 text-sm">
           <MapPin className="size-4" />
           {event.location}
         </div>
