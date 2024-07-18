@@ -14,6 +14,13 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const registerSchema = z
   .object({
@@ -21,6 +28,12 @@ const registerSchema = z
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
+    role: z.enum(["ORGANIZER", "PARTICIPANT"]),
+    referralCode: z
+      .string()
+      .min(8, "Referral code must be at least 8 characters")
+      .max(8, "Referral code must be at most 8 characters")
+      .optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -35,28 +48,41 @@ export default function RegisterForm() {
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
-    console.log(values);
     try {
-      const response = await fetch("http://localhost:8080/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const { confirmPassword, ...payload } = values;
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message);
       }
+
       toast({
         description: "Successfully registered",
       });
       router.push("/login");
     } catch (error) {
-      console.log(error);
-      //   toast({
-      //     description: error,
-      //   });
+      if (error instanceof Error) {
+        toast({
+          description: error.message,
+          variant: "destructive",
+        });
+        console.log(error.message);
+      } else {
+        toast({
+          description: "An unknown error occurred",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -68,11 +94,13 @@ export default function RegisterForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>Name</FormLabel>
+                <FormMessage />
+              </div>
               <FormControl>
                 <Input placeholder="John Doe" {...field} />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -81,11 +109,13 @@ export default function RegisterForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>Email</FormLabel>
+                <FormMessage />
+              </div>
               <FormControl>
                 <Input placeholder="abc@mail.com" {...field} />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -94,11 +124,13 @@ export default function RegisterForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>Password</FormLabel>
+                <FormMessage />
+              </div>
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -107,14 +139,55 @@ export default function RegisterForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm password</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>Confirm password</FormLabel>
+                <FormMessage />
+              </div>
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
+        <div className="grid grid-cols-2 gap-x-4">
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Role</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="ORGANIZER">Organizer</SelectItem>
+                    <SelectItem value="PARTICIPANT">User</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="referralCode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Referral Code</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <div className="flex justify-center">
           <Button type="submit" className="mt-3">
             Submit

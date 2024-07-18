@@ -17,11 +17,15 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ control }) => {
   const [image, setImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (file: File) => void
+  ) => {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files?.[0];
+      const file = e.target.files[0];
       setImage(URL.createObjectURL(file));
       setFileName(file.name);
+      onChange(file);
     }
   };
 
@@ -29,7 +33,7 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ control }) => {
     <FormField
       control={control}
       name="imageUrl"
-      render={({ field }) => (
+      render={({ field: { onChange, value, ...rest } }) => (
         <FormItem>
           <FormLabel>Upload your image</FormLabel>
           <FormControl>
@@ -37,10 +41,10 @@ const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ control }) => {
               <div className="w-full aspect-[2/1] mb-2 relative border-dashed border rounded-md overflow-hidden">
                 <input
                   type="file"
-                  {...field}
                   accept=".jpg, .jpeg, .png, .webp"
-                  onChange={handleImageUpload}
+                  onChange={(e) => handleImageUpload(e, onChange)}
                   className="cursor-pointer inset-0 absolute opacity-0"
+                  {...rest}
                 />
                 {image ? (
                   <Image

@@ -5,7 +5,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import locations from "@/constants/locations";
 
 interface LocationFieldProps {
   control: any;
@@ -18,9 +25,20 @@ const LocationField: React.FC<LocationFieldProps> = ({ control }) => (
     render={({ field }) => (
       <FormItem>
         <FormLabel>Location</FormLabel>
-        <FormControl>
-          <Input placeholder="Jakarta, Indonesia" {...field} />
-        </FormControl>
+        <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <FormControl>
+            <SelectTrigger>
+              <SelectValue placeholder="Pick location" />
+            </SelectTrigger>
+          </FormControl>
+          <SelectContent>
+            {locations.map((location) => (
+              <SelectItem key={location.value} value={location.value}>
+                {location.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <FormMessage />
       </FormItem>
     )}

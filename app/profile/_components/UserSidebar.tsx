@@ -9,10 +9,10 @@ import { LogOut } from "lucide-react";
 const navItems = [
   { href: "/profile", label: "My Profile" },
   { href: "/profile/tickets", label: "My Tickets" },
+  { href: "/profile/referral", label: "Referral" },
 ];
 
 export default function Sidebar() {
-  const [page, setPage] = React.useState<React.FC>();
   const router = useRouter();
   const pathname = usePathname();
 

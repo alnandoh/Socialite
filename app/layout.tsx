@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import Provider from "@/libs/utils/Provider";
+import QueryProvider from "@/libs/utils/QueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@/components/ui/toaster";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 const work_sans = Work_Sans({
   subsets: ["latin"],
@@ -20,18 +22,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="en">
       <body className={work_sans.className}>
-        <Provider>
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
-        </Provider>
+        <QueryProvider>
+          <SessionProvider session={session}>
+            {children}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </SessionProvider>
+        </QueryProvider>
         <Toaster />
       </body>
     </html>

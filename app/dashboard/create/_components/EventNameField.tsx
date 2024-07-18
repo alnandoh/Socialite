@@ -14,7 +14,7 @@ interface EventNameFieldProps {
 const EventNameField: React.FC<EventNameFieldProps> = ({ control }) => (
   <FormField
     control={control}
-    name="eventName"
+    name="name"
     render={({ field }) => (
       <FormItem>
         <FormLabel>Event Name</FormLabel>

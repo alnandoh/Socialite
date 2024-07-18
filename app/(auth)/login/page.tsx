@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/public/logo.png";
 import { LoginForm } from "../_component/LoginForm";
 import Login from "@/public/login.webp";
 
 export default function page() {
   return (
-    <div className="w-full h-screen lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div className="w-full h-screen lg:grid lg:grid-cols-2 xl:min-h-[800px]">
       <div className="hidden bg-muted lg:block">
         <Image
           src={Login}
@@ -16,23 +15,27 @@ export default function page() {
           className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
-      <div className="relative flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6">
-          <Link
-            href="/"
-            className="absolute top-10 left-1/2 justify-self-center -translate-x-[50%]"
-          >
-            <Image src={Logo} alt="Socialite logo" width={192} height={57} />
-          </Link>
+      <div className="flex flex-col items-center py-12 px-10 h-full">
+        <Link href="/">
+          <p className="text-5xl font-medium">
+            Socia<span className="text-orange-400">lite</span>
+          </p>
+        </Link>
+        <div className="my-auto grid w-full max-w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Login</h1>
+            <h1 className="text-3xl font-semibold">Login</h1>
           </div>
           <LoginForm />
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="underline">
-              Register
+          <div className="mt-2 text-center text-sm">
+            <Link href="/forgot-password" className=" underline">
+              Forgot your password?
             </Link>
+            <div className="mt-4">
+              Don&apos;t have an account?{" "}
+              <Link href="/register" className="underline">
+                Register
+              </Link>
+            </div>
           </div>
         </div>
       </div>
