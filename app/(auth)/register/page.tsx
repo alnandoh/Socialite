@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import RegisterForm from "../_component/RegisterForm";
-import Register from "@/public/Register.webp";
+import Register from "@/public/register.webp";
 
 export default function page() {
   return (

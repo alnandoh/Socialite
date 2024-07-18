@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Register from "@/public/Register.webp";
+import Register from "@/public/register.webp";
 import ForgotPasswordForm from "../_component/ForgotPasswordForm";
 import { Lock } from "lucide-react";
 
