@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { userLogin } from "./libs/api/api-libs";
 import { UserData } from "./types/userData";
+import { cookies } from "next/headers";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -19,10 +20,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           password: credentials.password as string,
         };
         const user = await userLogin(userData);
-        // TODO: Adjust code below according to your backend response structure
+        const jwt = user?.token;
+        const cookieStore = cookies();
+        cookieStore.set("sid", jwt);
         return user
           ? {
               ...user,
+              jwt,
               token: user.token,
               role: user.role,
             }
@@ -35,20 +39,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
     async jwt({ token, user }: any) {
-      // Initial sign in
       if (user) {
         token.id = user.id;
         token.role = user.role;
-        token.accessToken = user.token;
+        token.accessToken = user.jwt;
       }
       return token;
     },
     async session({ session, token }: any) {
-      // Add user data to the session object
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
-        session.accessToken = token.accessToken;
+        session.user.token = token.accessToken;
       }
       console.log("session", session);
       return session;
