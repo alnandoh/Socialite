@@ -31,12 +31,8 @@ import {
 } from "@/components/ui/select";
 import { UploadCloud } from "lucide-react";
 import Image from "next/image";
-
-const ticketSchema = z.object({
-  tierName: z.string().min(1, "Name is required"),
-  price: z.coerce.number().min(0, `Price cannot be negative`),
-  availableSeats: z.coerce.number().min(1, `Minimum 1 ticket`),
-});
+import { useSession } from "next-auth/react";
+import TicketRows from "./_components/TicketRows";
 
 const promotionSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -55,12 +51,19 @@ const createEventSchema = z.object({
   location: z.string(),
   categoryId: z.string(),
   isFree: z.boolean(),
-  imageUrl: z.any(),
-  tickets: z.array(ticketSchema).min(1, "Minimum 1 ticket types"),
+  imageUrl: z.any().optional(),
+  tickets: z.array(
+    z.object({
+      tierName: z.string(),
+      price: z.number(),
+      availableSeats: z.number(),
+    })
+  ),
   promotions: z.array(promotionSchema).optional(),
 });
 
 export default function CreateEventPage() {
+  const { data: session } = useSession();
   const form = useForm<z.infer<typeof createEventSchema>>({
     resolver: zodResolver(createEventSchema),
     defaultValues: {
@@ -97,37 +100,65 @@ export default function CreateEventPage() {
     }
   }, [form.watch("isFree"), form.setValue]);
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+
+  const handleImageUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (file: File) => void
+  ) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setImage(URL.createObjectURL(file));
+      setFileName(file.name);
+      onChange(file);
+    }
+  };
+
+  const [ticketRows, setTicketRows] = useState([{ id: 0 }]);
+
+  const addTicketRow = () => {
+    const newTicketRow = { id: ticketRows.length };
+    setTicketRows([...ticketRows, newTicketRow]);
+  };
+
+  const removeTicketRow = (indexToRemove: number) => {
+    const updatedRows = ticketRows.filter(
+      (_, index) => index !== indexToRemove
+    );
+    setTicketRows(updatedRows);
+  };
 
   const onSubmit = async (values: z.infer<typeof createEventSchema>) => {
     try {
       console.log(values);
-
       const formData = new FormData();
-      const typedValues = values as { [key: string]: any };
 
-      Object.keys(typedValues).forEach((key) => {
-        if (key === "date" || key === "endDate") {
-          formData.append(key, typedValues[key]?.toISOString() || "");
-        } else if (key === "imageUrl" && typedValues[key]) {
-          const file = typedValues[key];
-          formData.append(key, file);
-          console.log("Image file:", file); // This will log the File object
-        } else if (key === "category") {
-          formData.append(key, String(parseInt(typedValues[key])));
-        } else if (key === "promotions" && !typedValues.isFree) {
-          formData.append(key, JSON.stringify(typedValues[key]));
-        } else if (key === "tickets") {
-          formData.append(key, JSON.stringify(typedValues[key]));
-        } else {
-          formData.append(key, String(typedValues[key]));
-        }
-      });
+      formData.append("name", values.name);
+      formData.append("date", values.date.toISOString());
+      if (values.endDate) {
+        formData.append("endDate", values.endDate.toISOString());
+      }
+      formData.append("description", values.description);
+      formData.append("location", values.location);
+      formData.append("categoryId", values.categoryId.toString());
+      formData.append("isFree", values.isFree.toString());
+      formData.append("imageUrl", values.imageUrl);
+      formData.append("tickets", JSON.stringify(values.tickets));
+      formData.append("promotions", JSON.stringify(values.promotions));
+
       console.log("FormData keys:", Array.from(formData.keys()));
+      console.log("FormData values:", Array.from(formData.values()));
       console.log("Image file:", formData.get("imageUrl"));
-
-      await createEvent(formData);
-
+      console.log(session?.user?.token as string);
+      const response = await createEvent(
+        session?.user?.token as string,
+        formData
+      );
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message);
+      }
       toast({
         description: "Successfully Created Event",
       });
@@ -167,15 +198,11 @@ export default function CreateEventPage() {
                           type="file"
                           accept=".jpg, .jpeg, .png, .webp"
                           className="cursor-pointer inset-0 absolute opacity-0"
-                          onChange={(event) =>
-                            onChange(
-                              event.target.files && event.target.files[0]
-                            )
-                          }
+                          onChange={(e) => handleImageUpload(e, onChange)}
                         />
-                        {imagePreview ? (
+                        {image ? (
                           <Image
-                            src={imagePreview}
+                            src={image}
                             alt="preview"
                             width={600}
                             height={300}
@@ -192,6 +219,13 @@ export default function CreateEventPage() {
                           </div>
                         )}
                       </div>
+                      {fileName ? (
+                        <p className="text-sm text-center mt-2.5">{fileName}</p>
+                      ) : (
+                        <p className="text-sm text-center mt-2.5">
+                          No files selected
+                        </p>
+                      )}
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -233,87 +267,17 @@ export default function CreateEventPage() {
                   <FormLabel className="mt-3 text-center text-lg justify-center">
                     Ticket Tier
                   </FormLabel>
-                  {fields.map((field: any, index: number) => (
-                    <div
-                      key={field.id}
-                      className="flex gap-4 pb-4 px-4 py-2 border rounded-lg"
-                    >
-                      <FormField
-                        control={form.control}
-                        name={`tickets.${index}.tierName`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Tier</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Ticket tier"
-                                disabled={form.watch("isFree")}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`tickets.${index}.price`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Price</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                step="100"
-                                placeholder="Price"
-                                disabled={form.watch("isFree")}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`tickets.${index}.availableSeats`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Quantity</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="Quantity"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {fields.length > 1 && (
-                        <Button
-                          type="button"
-                          onClick={() => remove(index)}
-                          className="mt-8"
-                        >
-                          Remove
-                        </Button>
-                      )}
-                    </div>
+                  {ticketRows.map((_, index) => (
+                    <TicketRows
+                      key={index}
+                      index={index}
+                      watch={form.watch("isFree")}
+                      removeRow={removeTicketRow}
+                    />
                   ))}
                   {!form.watch("isFree") && (
-                    <Button
-                      type="button"
-                      onClick={() =>
-                        append({
-                          tierName: "",
-                          price: 5000,
-                          availableSeats: 1,
-                        })
-                      }
-                    >
-                      Add Ticket Type
+                    <Button type="button" onClick={addTicketRow}>
+                      Add Ticket
                     </Button>
                   )}
                 </div>
