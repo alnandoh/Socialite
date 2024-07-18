@@ -94,6 +94,8 @@ export default function Page() {
         onFilterChange={handleFilterChange}
         onClearFilters={clearFilters}
         totalEvents={data?.totalData ?? 0}
+        currentPage={currentPage}
+        itemsPerPage={filters.limit}
       />
       <EventList events={events} />
       <div className="flex justify-center items-center space-x-2">

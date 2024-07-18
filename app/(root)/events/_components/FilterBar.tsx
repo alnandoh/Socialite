@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FilterIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ interface FilterBarProps {
   onFilterChange: (key: keyof Filters, value: string) => void;
   onClearFilters: () => void;
   totalEvents: number;
+  currentPage: number;
+  itemsPerPage: number;
 }
 
 export default function FilterBar({
@@ -17,18 +19,27 @@ export default function FilterBar({
   onFilterChange,
   onClearFilters,
   totalEvents,
+  currentPage,
+  itemsPerPage,
 }: FilterBarProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const { startCount, endCount } = useMemo(() => {
+    const start = currentPage * itemsPerPage + 1;
+    const end = Math.min((currentPage + 1) * itemsPerPage, totalEvents);
+    return { startCount: start, endCount: end };
+  }, [currentPage, itemsPerPage, totalEvents]);
 
   return (
     <div className="w-full flex justify-between items-center flex-wrap gap-4">
       {totalEvents > 0 ? (
         <p>
-          Show {totalEvents} from{" "}
+          Showing <span className="font-semibold">{startCount}</span> -{" "}
+          <span className="font-semibold">{endCount}</span> from{" "}
           <span className="font-semibold">{totalEvents}</span> events
         </p>
       ) : (
-        <p> No events found</p>
+        <p>No events found</p>
       )}
 
       <div className="lg:hidden">
