@@ -46,9 +46,19 @@ export default function EventList<TData, TValue>({
     },
   });
 
+  const handleEdit = (id: string) => {
+    // Add your edit logic here
+    console.log("Edit event with id:", id);
+  };
+
+  const handleDelete = (id: string) => {
+    // Add your delete logic here
+    console.log("Delete event with id:", id);
+  };
+
   return (
     <div>
-      <div className="flex items-center pb-4 w-full">
+      <div className="flex items-center justify-between pb-2 w-full">
         <Input placeholder="Search events" className="max-w-lg" />
       </div>
       <div className="rounded-md border bg-stone-100">
@@ -56,18 +66,16 @@ export default function EventList<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -86,12 +94,28 @@ export default function EventList<TData, TValue>({
                       )}
                     </TableCell>
                   ))}
+                  <TableCell className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(row.id)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(row.id)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columns.length + 1} // Adjust the colspan to account for the new column
                   className="h-24 text-center"
                 >
                   No results.
